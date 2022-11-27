@@ -1,26 +1,29 @@
 name: CI & CD for Windows Forms
 
 on:
-	push:
-		branches:
-			- main
+  push:
+    branches: main
 
 jobs:
-	build:
-		runs-on: windows-latest
-		steps:
-			- name: Checkout 
-			  uses: actions/checkout@v3
-			  with: 
-				fetch-depth: 0
+  docker-image:
+    runs-on: windows-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+ 
+      -
+        name: Fetch .NET v6
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '6.0.x'
 
-			- name: Fetch .NET v6
-			  uses: actions/setup-dotnet@v6
-			  with: 
-				dotnet-version: '6.0.x'
+      -
+        name: Restore .NET 
+        run: dotnet restore
 
-			- name: .NET Restore
-			  run: dotnet restore
-
-			- name: Build application
-			  run: dotnet build -c Release --no-restore
+      -
+        name: Build Application 
+        run: dotnet build -c Release --no-restore
