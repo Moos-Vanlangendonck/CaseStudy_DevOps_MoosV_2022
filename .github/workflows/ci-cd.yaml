@@ -26,4 +26,5 @@ jobs:
 
           -
             name: Build Application 
-            run: dotnet msbuild -c Release --no-restore
+            # run: dotnet build -c Release --no-restore
+            run: dotnet msbuild -property:Configuration=Release
