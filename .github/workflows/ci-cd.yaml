@@ -18,7 +18,7 @@ jobs:
             name: Fetch .NET v7
             uses: actions/setup-dotnet@v1
             with:
-              dotnet-version: '7.0.x'
+              dotnet-version: '5.0.x'
 
           -
             name: Restore .NET 
@@ -26,5 +26,5 @@ jobs:
 
           -
             name: Build Application 
-            # run: dotnet build -c Release --no-restore
-            run: dotnet msbuild -property:Configuration=Release
+            run: dotnet build -c Release --no-restore
+            # run: dotnet msbuild -property:Configuration=Release
