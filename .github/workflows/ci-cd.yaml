@@ -15,10 +15,10 @@ jobs:
               fetch-depth: 0
  
           -
-            name: Fetch .NET v6
-            uses: actions/setup-dotnet@v6
+            name: Fetch .NET v5
+            uses: actions/setup-dotnet@v5
             with:
-              dotnet-version: '6.0.x'
+              dotnet-version: '5.0.x'
 
           -
             name: Restore .NET 
