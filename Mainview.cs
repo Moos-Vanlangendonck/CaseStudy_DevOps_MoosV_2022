@@ -99,9 +99,9 @@ namespace CaseStudy_DevOps_MoosV_2022
 
         private void btnCreatePlaylist_Click(object sender, EventArgs e)
         {
-            Playlists playlists = new Playlists(); // Create playlists view instance
+            CreatePlaylists _createPlaylists = new CreatePlaylists(); // Create playlists view instance
 
-            playlists.Show(); // Show the playlist view
+            _createPlaylists.Show(); // Show the playlist view
 
             this.Hide();
         }
@@ -114,9 +114,9 @@ namespace CaseStudy_DevOps_MoosV_2022
 
         private void btnViewPlaylist_Click(object sender, EventArgs e)
         {
-            ViewPlaylists viewplaylists = new ViewPlaylists(); // Create view playlists view instance
+            EditPlaylists _editPlaylists = new EditPlaylists(); // Create view playlists view instance
 
-            viewplaylists.Show(); // Show the view playlist form
+            _editPlaylists.Show(); // Show the view playlist form
 
             this.Hide();
         }

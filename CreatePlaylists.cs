@@ -11,9 +11,9 @@ using System.Data.SQLite;
 
 namespace CaseStudy_DevOps_MoosV_2022
 {
-    public partial class Playlists : Form
+    public partial class CreatePlaylists : Form
     {
-        public Playlists()
+        public CreatePlaylists()
         {
             InitializeComponent();
         }
@@ -25,7 +25,7 @@ namespace CaseStudy_DevOps_MoosV_2022
         static SQLiteConnection ConnectDB()
         {
             // Connect to database if exists
-            SQLiteConnection _conn = new SQLiteConnection("Data Source=database.db;Version=3;New=True,Compress=True;");
+            SQLiteConnection _conn = new SQLiteConnection("Data Source=_database.db;Version=3;New=True,Compress=True;");
 
             try
             {
@@ -46,7 +46,6 @@ namespace CaseStudy_DevOps_MoosV_2022
             // -----------------------------------
 
             SQLiteCommand _cmd;
-
             // create cmd string
             string _createSQL = "DROP TABLE IF EXISTS " + _tbName + ";";
             // create the cmd
@@ -60,7 +59,10 @@ namespace CaseStudy_DevOps_MoosV_2022
             _createSQL = "CREATE TABLE " + _tbName + " (id, name TEXT NOT NULL, audio BLOB NOT NULL);";
             _cmd = _conn.CreateCommand();
             _cmd.CommandText = _createSQL;
-            _cmd.ExecuteNonQuery();
+            if (_cmd.ExecuteNonQuery() == -1)
+            {
+                Console.WriteLine("Error");
+            }
         }
 
         private void Playlists_FormClosing(object sender, FormClosingEventArgs e)
