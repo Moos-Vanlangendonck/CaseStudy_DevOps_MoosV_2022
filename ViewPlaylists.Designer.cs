@@ -1,6 +1,6 @@
 ﻿namespace CaseStudy_DevOps_MoosV_2022
 {
-    partial class Form1
+    partial class ViewPlaylists
     {
         /// <summary>
         /// Required designer variable.
@@ -28,13 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // ViewPlaylists
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            this.Name = "ViewPlaylists";
+            this.ShowIcon = false;
+            this.Text = "View playlists";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ViewPlaylists_FormClosing);
+            this.Load += new System.EventHandler(this.ViewPlaylists_Load);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
     }
 }
-
