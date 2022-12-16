@@ -37,7 +37,6 @@ namespace CaseStudy_DevOps_MoosV_2022
                 Console.WriteLine("-------");
             }
 
-
             SQLiteCommand _cmd = new SQLiteCommand("SELECT name FROM sqlite_master WHERE type='table'", _conn);
             using (SQLiteDataReader _reader = _cmd.ExecuteReader())
             {
@@ -50,11 +49,30 @@ namespace CaseStudy_DevOps_MoosV_2022
             {
                 lsPlaylists.Items.Add(_playlist.ToString());
             }
+            _conn.Close();
         }
 
         private void btwAddsong_Click(object sender, EventArgs e)
         {
+            string _listToAdd = lsPlaylists.SelectedItem.ToString();
 
+            // Connect to database if exists
+            SQLiteConnection _conn = new SQLiteConnection("Data Source=_database.db;Version=3;New=True,Compress=True;");
+
+            try
+            {
+                _conn.Open();
+            }
+            catch (Exception _err)
+            {
+                Console.WriteLine("Error: ");
+                Console.Write(_err);
+                Console.WriteLine("-------");
+            }
+
+            MessageBox.Show("Enter choose your song!");
+
+            SQLiteCommand _cmd = new SQLiteCommand("INSERT INTO " + _listToAdd + " (name, audio) VALUES (" + System.IO.Path.GetFileNameWithoutExtension(ofdAddSong.FileName) + " " + ofdAddSong.SelectedPath + " ) FROM sqlite_master WHERE type='table'", _conn);
         }
 
         private void btnRemoveList_Click(object sender, EventArgs e)

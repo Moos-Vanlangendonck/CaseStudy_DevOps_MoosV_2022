@@ -32,6 +32,7 @@
             this.btwAddsong = new System.Windows.Forms.Button();
             this.btnRemoveList = new System.Windows.Forms.Button();
             this.btnRenamelist = new System.Windows.Forms.Button();
+            this.ofdAddSong = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // lsPlaylists
@@ -95,5 +96,6 @@
         private System.Windows.Forms.Button btwAddsong;
         private System.Windows.Forms.Button btnRemoveList;
         private System.Windows.Forms.Button btnRenamelist;
+        private System.Windows.Forms.OpenFileDialog ofdAddSong;
     }
 }
