@@ -22,5 +22,5 @@ NuGet Packages
   - Version: 1.1.0.1
 - VideoLibrary, by : Bar Arnon, OMANSAK
   - Version: 3.2.2
-- System.SQlite, by SQLite Dev Team
+- System.SQlite, by : SQLite Dev Team
   - Version: 1.0.117

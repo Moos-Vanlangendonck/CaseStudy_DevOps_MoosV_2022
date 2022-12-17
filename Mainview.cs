@@ -15,6 +15,7 @@ using MediaToolkit.Model;
 using System.Security.Cryptography;
 using MediaToolkit;
 using System.Collections.Specialized;
+using System.Data.SQLite;
 
 namespace CaseStudy_DevOps_MoosV_2022
 {
@@ -74,7 +75,7 @@ namespace CaseStudy_DevOps_MoosV_2022
 
             // create media file for input
             var _in = new MediaFile { Filename = _src + _vid.FullName };
-            // create media fiel for output
+            // create media file for output
             var _out = new MediaFile { Filename = $"{_src + (_vid.FullName).Remove(_vid.FullName.Length - 4)}.mp3" };
 
             // convert files with _in and _out
@@ -99,11 +100,49 @@ namespace CaseStudy_DevOps_MoosV_2022
 
         private void btnCreatePlaylist_Click(object sender, EventArgs e)
         {
-            CreatePlaylists _createPlaylists = new CreatePlaylists(); // Create playlists view instance
+            string _txtName;
+            using (CreatePlaylists _createPlaylists = new CreatePlaylists())
+            {
+                if (_createPlaylists.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    _txtName = _createPlaylists.tbName;
+                    // Connect to database if exists
+                    SQLiteConnection _conn = new SQLiteConnection("Data Source=_database.db;Version=3;New=True,Compress=True;");
 
-            _createPlaylists.Show(); // Show the playlist view
+                    try
+                    {
+                        _conn.Open();
+                    }
+                    catch (Exception _err)
+                    {
+                        Console.WriteLine("Error: ");
+                        Console.Write(_err);
+                        Console.WriteLine("-------");
+                    }
 
-            this.Hide();
+                    // Create a new table if not exists
+                    // -----------------------------------
+
+                    SQLiteCommand _cmd;
+                    // create cmd string
+                    string _createSQL = "DROP TABLE IF EXISTS " + _txtName + ";";
+                    // create the cmd
+                    _cmd = _conn.CreateCommand();
+                    // load the string into cmd
+                    _cmd.CommandText = _createSQL;
+                    // execute the cmd
+                    _cmd.ExecuteNonQuery();
+
+                    // create the table with appropriate settings
+                    _createSQL = "CREATE TABLE " + _txtName + " (id, name TEXT NOT NULL, audio BLOB NOT NULL);";
+                    _cmd = _conn.CreateCommand();
+                    _cmd.CommandText = _createSQL;
+                    if (_cmd.ExecuteNonQuery() == -1)
+                    {
+                        Console.WriteLine("Error");
+                    }
+                }
+            }
         }
 
         private void Mainview_FormClosed(object sender, FormClosedEventArgs e)
@@ -117,8 +156,6 @@ namespace CaseStudy_DevOps_MoosV_2022
             EditPlaylists _editPlaylists = new EditPlaylists(); // Create view playlists view instance
 
             _editPlaylists.Show(); // Show the view playlist form
-
-            this.Hide();
         }
 
         private void btnConvert_Click(object sender, EventArgs e)

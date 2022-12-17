@@ -42,6 +42,7 @@
             // 
             // btnCreatePlaylist
             // 
+            this.btnCreatePlaylist.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnCreatePlaylist.Location = new System.Drawing.Point(268, 33);
             this.btnCreatePlaylist.Name = "btnCreatePlaylist";
             this.btnCreatePlaylist.Size = new System.Drawing.Size(100, 34);
@@ -63,14 +64,16 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(390, 91);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCreatePlaylist);
             this.Controls.Add(this.txtPlaylistName);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "CreatePlaylists";
             this.ShowIcon = false;
             this.Text = "Create Playlists";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Playlists_FormClosing);
             this.Load += new System.EventHandler(this.Playlists_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

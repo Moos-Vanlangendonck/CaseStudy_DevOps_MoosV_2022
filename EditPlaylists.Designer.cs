@@ -33,6 +33,7 @@
             this.btnRemoveList = new System.Windows.Forms.Button();
             this.btnRenamelist = new System.Windows.Forms.Button();
             this.ofdAddSong = new System.Windows.Forms.OpenFileDialog();
+            this.lsSongs = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // lsPlaylists
@@ -42,6 +43,7 @@
             this.lsPlaylists.Name = "lsPlaylists";
             this.lsPlaylists.Size = new System.Drawing.Size(182, 420);
             this.lsPlaylists.TabIndex = 0;
+            this.lsPlaylists.SelectedIndexChanged += new System.EventHandler(this.lsPlaylists_SelectedIndexChanged);
             // 
             // btwAddsong
             // 
@@ -73,16 +75,26 @@
             this.btnRenamelist.UseVisualStyleBackColor = true;
             this.btnRenamelist.Click += new System.EventHandler(this.btnRenamelist_Click);
             // 
+            // lsSongs
+            // 
+            this.lsSongs.FormattingEnabled = true;
+            this.lsSongs.Location = new System.Drawing.Point(201, 104);
+            this.lsSongs.Name = "lsSongs";
+            this.lsSongs.Size = new System.Drawing.Size(200, 329);
+            this.lsSongs.TabIndex = 4;
+            // 
             // EditPlaylists
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lsSongs);
             this.Controls.Add(this.btnRenamelist);
             this.Controls.Add(this.btnRemoveList);
             this.Controls.Add(this.btwAddsong);
             this.Controls.Add(this.lsPlaylists);
             this.Name = "EditPlaylists";
+            this.ShowIcon = false;
             this.Text = "EditPlaylists";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditPlaylists_FormClosing);
             this.Load += new System.EventHandler(this.EditPlaylists_Load);
@@ -97,5 +109,6 @@
         private System.Windows.Forms.Button btnRemoveList;
         private System.Windows.Forms.Button btnRenamelist;
         private System.Windows.Forms.OpenFileDialog ofdAddSong;
+        private System.Windows.Forms.ListBox lsSongs;
     }
 }

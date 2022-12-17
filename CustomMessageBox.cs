@@ -7,27 +7,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SQLite;
 
 namespace CaseStudy_DevOps_MoosV_2022
 {
-    public partial class CreatePlaylists : Form
+    public partial class CustomMessageBox : Form
     {
-        public string tbName { get; set; }
-        public CreatePlaylists()
+        public string newName { get; set; }
+        public CustomMessageBox()
         {
             InitializeComponent();
         }
 
-        private void Playlists_Load(object sender, EventArgs e)
+        private void btnEnter_Click(object sender, EventArgs e)
         {
         }
 
-        private void btnCreatePlaylist_Click(object sender, EventArgs e)
+        private void txtNewName_TextChanged(object sender, EventArgs e)
         {
-            if (txtPlaylistName.Text != "")
+            if (txtNewName.Text != "")
             {
-                tbName = txtPlaylistName.Text;
+                newName = txtNewName.Text;
             }
         }
     }
