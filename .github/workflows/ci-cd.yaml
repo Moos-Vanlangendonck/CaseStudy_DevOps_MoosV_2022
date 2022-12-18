@@ -1,7 +1,7 @@
 name: CI & CD for Windows Forms
 
 on:
-  push:
+  pull_request:
     branches: main
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
 
           -
             name: Restore .NET 
-            run: dotnet restore "${{ github.workspace }}/CaseStudy_DevOps_MoosV_2022.csproj"
+            run: dotnet restore
 
           - name: Setup Nuget
             uses: Nuget/setup-nuget@v1.0.5
@@ -32,16 +32,17 @@ jobs:
 
           -
             name: Build Application 
-            run: dotnet build "${{ github.workspace }}/CaseStudy_DevOps_MoosV_2022.csproj" -c Release --no-restore
+            run: dotnet build -c Release --no-restore
             
           -
             name: Publish Application 
-            run: dotnet publish "${{ github.workspace }}/CaseStudy_DevOps_MoosV_2022.csproj" -c Release -o CaseStudy_DevOps_MoosV_2022
+            run: dotnet publish -c Release -o app
           
           -
             name: Upload artifact
             uses: actions/upload-artifact@v3
             with:
-              name: DevOps_artifacts
-              path: CaseStudy_DevOps_MoosV_2022/**
+              name: appbuildartifacts
+              path: app/**
               if-no-files-found: error
+              retention-days: 90
