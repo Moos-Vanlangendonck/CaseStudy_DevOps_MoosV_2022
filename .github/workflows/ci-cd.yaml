@@ -33,17 +33,14 @@ jobs:
           -
             name: Build Application 
             run: dotnet build -c Release --no-restore
-          
-          -
-            run: |
-              mkdir downloads
-              cd downloads
-              copy ../../bin/Debug/CaseStudy_DevOps_MoosV_2022.exe ./CaseStudy_DevOps_MoosV_2022.exe
-              cd ../
 
           -
+            name: Publish Application 
+            run: dotnet publish -c Release -o CaseStudy_DevOps_MoosV_2022
+          
+          -
             name: Upload artifact
-            uses: actions/upload-artifact@v2
+            uses: actions/upload-artifact@v3
             with:
-              name: download .exe file
-              path: downloads
+              name: DevOps_artifacts
+              path: downloads/**
