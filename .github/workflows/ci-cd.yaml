@@ -43,4 +43,5 @@ jobs:
             uses: actions/upload-artifact@v3
             with:
               name: DevOps_artifacts
-              path: downloads/**
+              path: CaseStudy_DevOps_MoosV_2022/**
+              if-no-files-found: error
