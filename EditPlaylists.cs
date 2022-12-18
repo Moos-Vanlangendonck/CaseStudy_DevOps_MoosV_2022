@@ -66,20 +66,21 @@ namespace CaseStudy_DevOps_MoosV_2022
         {
             string _listToAdd = lsPlaylists.SelectedItem.ToString();
 
-            ofdAddSong.ShowDialog();
-            //var _file = File.ReadAllBytes(Path.GetFullPath(ofdAddSong.FileName));
-            //var _file = File.OpenRead(Path.GetFullPath(ofdAddSong.FileName));
-            var _file = new MediaFile(Path.GetFullPath(ofdAddSong.FileName));
+            if(ofdAddSong.ShowDialog() == DialogResult.OK)
+            { 
+                var _file = new MediaFile(Path.GetFullPath(ofdAddSong.FileName));
 
-            using (IDbConnection _db = GetConnection())
-            {
-                var cmd = "INSERT INTO '" + _listToAdd + "' (name, audio) VALUES ('" + System.IO.Path.GetFileNameWithoutExtension(ofdAddSong.FileName).ToString() + "', @file)";
-                var Params = new DynamicParameters();
-                Params.Add("@file", DbType.Binary);
-                _db.Execute(cmd, Params);
+                using (IDbConnection _db = GetConnection())
+                {
+                    var cmd = "INSERT INTO '" + _listToAdd + "' (name, audio) VALUES ('" + System.IO.Path.GetFileNameWithoutExtension(ofdAddSong.FileName).ToString() + "', @file)";
+                    var Params = new DynamicParameters();
+                    Params.Add("@file", DbType.Binary);
+                    _db.Execute(cmd, Params);
+                }
+                lsSongs.Items.Add(System.IO.Path.GetFileNameWithoutExtension(ofdAddSong.FileName));
+                _file = null;
+                MessageBox.Show(System.IO.Path.GetFileNameWithoutExtension(ofdAddSong.FileName).ToString() + " was added to " + _listToAdd + "!");
             }
-            lsSongs.Items.Add(System.IO.Path.GetFileNameWithoutExtension(ofdAddSong.FileName));
-            _file = null;
         }
 
         private void btnRemoveList_Click(object sender, EventArgs e)

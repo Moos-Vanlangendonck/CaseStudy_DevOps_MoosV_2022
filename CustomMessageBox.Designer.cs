@@ -75,6 +75,7 @@
             this.MinimizeBox = false;
             this.Name = "CustomMessageBox";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MessageBox";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

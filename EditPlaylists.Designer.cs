@@ -61,7 +61,7 @@
             this.btnRemoveList.Name = "btnRemoveList";
             this.btnRemoveList.Size = new System.Drawing.Size(75, 23);
             this.btnRemoveList.TabIndex = 2;
-            this.btnRemoveList.Text = "remove list";
+            this.btnRemoveList.Text = "Remove list";
             this.btnRemoveList.UseVisualStyleBackColor = true;
             this.btnRemoveList.Click += new System.EventHandler(this.btnRemoveList_Click);
             // 
@@ -71,7 +71,7 @@
             this.btnRenamelist.Name = "btnRenamelist";
             this.btnRenamelist.Size = new System.Drawing.Size(75, 23);
             this.btnRenamelist.TabIndex = 3;
-            this.btnRenamelist.Text = "rename list";
+            this.btnRenamelist.Text = "Rename list";
             this.btnRenamelist.UseVisualStyleBackColor = true;
             this.btnRenamelist.Click += new System.EventHandler(this.btnRenamelist_Click);
             // 
@@ -93,8 +93,11 @@
             this.Controls.Add(this.btnRemoveList);
             this.Controls.Add(this.btwAddsong);
             this.Controls.Add(this.lsPlaylists);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "EditPlaylists";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EditPlaylists";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditPlaylists_FormClosing);
             this.Load += new System.EventHandler(this.EditPlaylists_Load);

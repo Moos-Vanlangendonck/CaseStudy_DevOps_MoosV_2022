@@ -34,7 +34,7 @@ namespace CaseStudy_DevOps_MoosV_2022
 
         private void Form1_Load(object sender, EventArgs e)
         {
-           // nothing
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
         }
 
         private void _validateURL(string _url)
@@ -118,8 +118,9 @@ namespace CaseStudy_DevOps_MoosV_2022
                         _db.Execute("DROP TABLE IF EXISTS " + _txtName + ";");
                         _db.Execute("CREATE TABLE " + _txtName + " (id, name TEXT NOT NULL, audio BLOB NOT NULL);");
                     }
+                    MessageBox.Show("Playlist '" + _txtName + "' was created!");
                 }
-            }
+            }            
         }
 
         private void Mainview_FormClosed(object sender, FormClosedEventArgs e)

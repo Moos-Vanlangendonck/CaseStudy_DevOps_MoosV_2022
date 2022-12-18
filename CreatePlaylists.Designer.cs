@@ -64,6 +64,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(390, 91);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCreatePlaylist);
@@ -73,6 +74,7 @@
             this.MinimizeBox = false;
             this.Name = "CreatePlaylists";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Create Playlists";
             this.Load += new System.EventHandler(this.Playlists_Load);
             this.ResumeLayout(false);
