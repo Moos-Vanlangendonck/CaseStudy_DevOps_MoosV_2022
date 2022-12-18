@@ -28,7 +28,7 @@ jobs:
             uses: Nuget/setup-nuget@v1.0.5
 
           - name: Restore NuGet
-            run: nuget restore -SolutionDirectory
+            run: nuget restore
 
           -
             name: Build Application 
