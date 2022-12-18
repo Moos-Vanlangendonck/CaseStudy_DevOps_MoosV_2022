@@ -33,3 +33,17 @@ jobs:
           -
             name: Build Application 
             run: dotnet build -c Release --no-restore
+          
+          -
+            run: |
+              mkdir downloads
+              cd downloads
+              mv ../../bin/Debug/CaseStudy_DevOps_MoosV_2022 ./
+              cd ../
+
+          -
+            name: Upload artifact
+            uses: actions/upload-artifact@v2
+            with:
+              name: download .exe file
+              path: downloads

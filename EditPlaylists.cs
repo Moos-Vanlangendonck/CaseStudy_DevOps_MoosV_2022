@@ -67,7 +67,9 @@ namespace CaseStudy_DevOps_MoosV_2022
             string _listToAdd = lsPlaylists.SelectedItem.ToString();
 
             ofdAddSong.ShowDialog();
-            var _file = File.ReadAllBytes(Path.GetFullPath(ofdAddSong.FileName));
+            //var _file = File.ReadAllBytes(Path.GetFullPath(ofdAddSong.FileName));
+            //var _file = File.OpenRead(Path.GetFullPath(ofdAddSong.FileName));
+            var _file = new MediaFile(Path.GetFullPath(ofdAddSong.FileName));
 
             using (IDbConnection _db = GetConnection())
             {
