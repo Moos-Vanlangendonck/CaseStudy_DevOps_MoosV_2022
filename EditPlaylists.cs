@@ -96,7 +96,6 @@ namespace CaseStudy_DevOps_MoosV_2022
                 lsPlaylists.Refresh();
                 lsPlaylists.SetSelected(0, true);
             }
-
             lsSongs.Items.Clear();
 
             using (IDbConnection _db = GetConnection())
