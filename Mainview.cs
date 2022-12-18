@@ -16,6 +16,7 @@ using System.Security.Cryptography;
 using MediaToolkit;
 using System.Collections.Specialized;
 using System.Data.SQLite;
+using Dapper;
 
 namespace CaseStudy_DevOps_MoosV_2022
 {
@@ -98,6 +99,11 @@ namespace CaseStudy_DevOps_MoosV_2022
             _validateURL(_url);
         }
 
+        public IDbConnection GetConnection()
+        {
+            return new SQLiteConnection(@"Data Source=_database.db;Version=3;New=True,Compress=True;");
+        }
+
         private void btnCreatePlaylist_Click(object sender, EventArgs e)
         {
             string _txtName;
@@ -107,39 +113,10 @@ namespace CaseStudy_DevOps_MoosV_2022
                 {
                     _txtName = _createPlaylists.tbName;
                     // Connect to database if exists
-                    SQLiteConnection _conn = new SQLiteConnection("Data Source=_database.db;Version=3;New=True,Compress=True;");
-
-                    try
-                    {
-                        _conn.Open();
-                    }
-                    catch (Exception _err)
-                    {
-                        Console.WriteLine("Error: ");
-                        Console.Write(_err);
-                        Console.WriteLine("-------");
-                    }
-
-                    // Create a new table if not exists
-                    // -----------------------------------
-
-                    SQLiteCommand _cmd;
-                    // create cmd string
-                    string _createSQL = "DROP TABLE IF EXISTS " + _txtName + ";";
-                    // create the cmd
-                    _cmd = _conn.CreateCommand();
-                    // load the string into cmd
-                    _cmd.CommandText = _createSQL;
-                    // execute the cmd
-                    _cmd.ExecuteNonQuery();
-
-                    // create the table with appropriate settings
-                    _createSQL = "CREATE TABLE " + _txtName + " (id, name TEXT NOT NULL, audio BLOB NOT NULL);";
-                    _cmd = _conn.CreateCommand();
-                    _cmd.CommandText = _createSQL;
-                    if (_cmd.ExecuteNonQuery() == -1)
-                    {
-                        Console.WriteLine("Error");
+                    using (IDbConnection _db = GetConnection())
+                    {                         
+                        _db.Execute("DROP TABLE IF EXISTS " + _txtName + ";");
+                        _db.Execute("CREATE TABLE " + _txtName + " (id, name TEXT NOT NULL, audio BLOB NOT NULL);");
                     }
                 }
             }

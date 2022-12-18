@@ -24,3 +24,5 @@ NuGet Packages
   - Version: 3.2.2
 - System.SQlite, by : SQLite Dev Team
   - Version: 1.0.117
+- Dapper, by : Sam Saffron
+  - Version: 2.0.123

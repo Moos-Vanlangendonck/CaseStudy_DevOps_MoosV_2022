@@ -1,4 +1,5 @@
-﻿using MediaToolkit.Model;
+﻿using Dapper;
+using MediaToolkit.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,9 +11,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace CaseStudy_DevOps_MoosV_2022
 {
@@ -22,135 +25,89 @@ namespace CaseStudy_DevOps_MoosV_2022
         {
             InitializeComponent();
         }
-
+        public IDbConnection GetConnection()
+        {
+            return new SQLiteConnection(@"Data Source=_database.db;Version=3;New=True,Compress=True;");
+        }
         private void LoadPlaylist()
         {
-            // Connect to database if exists
-            SQLiteConnection _conn = new SQLiteConnection("Data Source=_database.db;Version=3;New=True,Compress=True;");
-            ArrayList _list = new ArrayList();
-
-            try
+            using (IDbConnection _db = GetConnection())
             {
-                _conn.Open();
-            }
-            catch (Exception _err)
-            {
-                Console.WriteLine("Error: ");
-                Console.Write(_err);
-                Console.WriteLine("-------");
-            }
-
-            SQLiteCommand _cmd = new SQLiteCommand("SELECT name FROM sqlite_master WHERE type='table'", _conn);
-            using (SQLiteDataReader _reader = _cmd.ExecuteReader())
-            {
-                while (_reader.Read())
+                var _list = _db.Query("SELECT name FROM sqlite_master WHERE type='table'").ToList();
+                foreach (var u in _list)
                 {
-                    _list.Add(_reader.GetString(0));
+                    lsPlaylists.Items.Add((u.name).ToString());
                 }
+
+                if (lsPlaylists.Items.Count > 1)
+                    lsPlaylists.SelectedIndex = 1;
+                else
+                    lsPlaylists.SelectedIndex = 0;
+                lsPlaylists.Refresh();
             }
-            foreach (var _playlist in _list)
-            {
-                lsPlaylists.Items.Add(_playlist.ToString());
-            }
-            _conn.Close();
-            lsPlaylists.SelectedIndex = 1;
-            lsPlaylists.Refresh();
         }
 
         private void EditPlaylists_Load(object sender, EventArgs e)
         {
             LoadPlaylist();
-            ArrayList _list = new ArrayList();
-
             lsSongs.Items.Clear();
-            // Connect to database if exists
-            SQLiteConnection _conn = new SQLiteConnection("Data Source=_database.db;Version=3;New=True,Compress=True;");
 
-            try
+            using (IDbConnection _db = GetConnection())
             {
-                _conn.Open();
-            }
-            catch (Exception _err)
-            {
-                Console.WriteLine("Error: ");
-                Console.Write(_err);
-                Console.WriteLine("-------");
-            }
-
-            SQLiteCommand _cmd = new SQLiteCommand("SELECT name FROM " + lsPlaylists.SelectedItem.ToString(), _conn);
-            using (SQLiteDataReader _reader = _cmd.ExecuteReader())
-            {
-                while (_reader.Read())
+                var _list = _db.Query("SELECT name FROM " + lsPlaylists.SelectedItem.ToString()).ToList();
+                foreach (var _song in _list)
                 {
-                    _list.Add(_reader.GetString(0));
+                    lsSongs.Items.Add(_song.name.ToString());
                 }
             }
-            foreach (var _song in _list)
-            {
-                lsSongs.Items.Add(_song.ToString());
-            }
-
-            _conn.Close();
         }
 
         private void btwAddsong_Click(object sender, EventArgs e)
         {
             string _listToAdd = lsPlaylists.SelectedItem.ToString();
 
-            // Connect to database if exists
-            SQLiteConnection _conn = new SQLiteConnection("Data Source=_database.db;Version=3;New=True,Compress=True;");
-
-            try
-            {
-                _conn.Open();
-            }
-            catch (Exception _err)
-            {
-                Console.WriteLine("Error: ");
-                Console.Write(_err);
-                Console.WriteLine("-------");
-            }
-
             ofdAddSong.ShowDialog();
-            byte[] _file = File.ReadAllBytes(Path.GetFullPath(ofdAddSong.FileName));
+            var _file = File.ReadAllBytes(Path.GetFullPath(ofdAddSong.FileName));
 
-            SQLiteCommand _cmd = new SQLiteCommand("INSERT INTO '" + _listToAdd + "' (name, audio) VALUES ('" + System.IO.Path.GetFileNameWithoutExtension(ofdAddSong.FileName).ToString() + "', @file)", _conn);
-            //_cmd.Parameters.AddWithValue("@file", _file);
-            //_cmd.Parameters.Add("@file", DbType.Binary, _file.Length).Value = _file;
-            //_cmd.Parameters.Add("@file", DbType.Binary, _file.Length);
-            _cmd.Parameters.AddWithValue("@file", _file).DbType = DbType.Binary;
-
-            _cmd.ExecuteNonQuery();
+            using (IDbConnection _db = GetConnection())
+            {
+                var cmd = "INSERT INTO '" + _listToAdd + "' (name, audio) VALUES ('" + System.IO.Path.GetFileNameWithoutExtension(ofdAddSong.FileName).ToString() + "', @file)";
+                var Params = new DynamicParameters();
+                Params.Add("@file", DbType.Binary);
+                _db.Execute(cmd, Params);
+            }
             lsSongs.Items.Add(System.IO.Path.GetFileNameWithoutExtension(ofdAddSong.FileName));
-            _conn.Close();
             _file = null;
-            _cmd.Dispose();
         }
 
         private void btnRemoveList_Click(object sender, EventArgs e)
         {
             string _listToRem = lsPlaylists.SelectedItem.ToString();
+            var item = lsPlaylists.Items.IndexOf(_listToRem);
 
-            // Connect to database if exists
-            SQLiteConnection _conn = new SQLiteConnection("Data Source=_database.db;Version=3;New=True,Compress=True;");
-            SQLiteCommand _cmd = new SQLiteCommand("DROP TABLE '" + _listToRem + "'", _conn);
+            using (IDbConnection _db = GetConnection())
+            {
+                _db.Execute("DROP TABLE '" + _listToRem + "'");
 
-            try
-            {
-                _conn.Open();
-            }
-            catch (Exception _err)
-            {
-                Console.WriteLine("Error: ");
-                Console.Write(_err);
-                Console.WriteLine("-------");
+                lsPlaylists.Items.RemoveAt(lsPlaylists.SelectedIndex);
+                lsPlaylists.Update();
+                lsPlaylists.Refresh();
+                lsPlaylists.SetSelected(0, true);
             }
 
-            _cmd.ExecuteNonQuery();
-            _conn.Close();
-            lsPlaylists.Items.RemoveAt(lsPlaylists.SelectedIndex);
-            lsPlaylists.SelectedIndex = 1;
-            lsPlaylists.Refresh();
+            lsSongs.Items.Clear();
+
+            using (IDbConnection _db = GetConnection())
+            {
+                if (lsPlaylists.SelectedItem.ToString() != "")
+                {
+                    var _list = _db.Query("SELECT name FROM " + lsPlaylists.SelectedItem.ToString()).ToList();
+                    foreach (var _song in _list)
+                    {
+                        lsSongs.Items.Add((_song.name).ToString());
+                    }
+                }
+            }
         }
 
         private void btnRenamelist_Click(object sender, EventArgs e)
@@ -164,72 +121,64 @@ namespace CaseStudy_DevOps_MoosV_2022
                 {
                     _txtRename = msb.newName;
 
-                    // Connect to database if exists
-                    SQLiteConnection _conn = new SQLiteConnection("Data Source=_database.db;Version=3;New=True,Compress=True;");
-                    SQLiteCommand _cmd = new SQLiteCommand("ALTER TABLE '" + _listToRen + "' RENAME TO '" + _txtRename + "'", _conn);
-
-                    try
+                    using (IDbConnection _db = GetConnection())
                     {
-                        _conn.Open();
-                    }
-                    catch (Exception _err)
-                    {
-                        Console.WriteLine("Error: ");
-                        Console.Write(_err);
-                        Console.WriteLine("-------");
-                    }
+                        _db.Execute("ALTER TABLE '" + _listToRen + "' RENAME TO '" + _txtRename + "'");
 
-                    _cmd.ExecuteNonQuery();
-                    _conn.Close();
-
-                    var item = lsPlaylists.Items.IndexOf(_listToRen);
-                    lsPlaylists.Items.RemoveAt(item);
-                    lsPlaylists.Items.Insert(item, _txtRename);
-                    lsPlaylists.Refresh();
+                        var item = lsPlaylists.Items.IndexOf(_listToRen);
+                        lsPlaylists.Items.RemoveAt(item);
+                        lsPlaylists.Items.Insert(item, _txtRename);
+                        lsPlaylists.SelectedIndex = item;
+                        lsPlaylists.Refresh();
+                    }
                 }
             }
-            
+
+            lsSongs.Items.Clear();
+
+            using (IDbConnection _db = GetConnection())
+            {
+                if (lsPlaylists.SelectedItem.ToString() != "")
+                {
+                    var _list = _db.Query("SELECT name FROM " + lsPlaylists.SelectedItem.ToString()).ToList();
+                    foreach (var _song in _list)
+                    {
+                        lsSongs.Items.Add((_song.name).ToString());
+                    }
+                }
+            }
         }
 
         private void EditPlaylists_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Closing form doesn't mean application stopped running
-            Application.Exit();
+            //Application.Exit();
         }
 
         private void lsPlaylists_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ArrayList _list = new ArrayList();
+            if (lsSongs.Items.Count >= 1)
+                lsSongs.Items.Clear();
 
-            lsSongs.Items.Clear();
-            // Connect to database if exists
-            SQLiteConnection _conn = new SQLiteConnection("Data Source=_database.db;Version=3;New=True,Compress=True;");
-
-            try
+            using (IDbConnection _db = GetConnection())
             {
-                _conn.Open();
-            }
-            catch (Exception _err)
-            {
-                Console.WriteLine("Error: ");
-                Console.Write(_err);
-                Console.WriteLine("-------");
-            }
-
-            SQLiteCommand _cmd = new SQLiteCommand("SELECT name FROM " + lsPlaylists.SelectedItem.ToString(), _conn);
-            using (SQLiteDataReader _reader = _cmd.ExecuteReader())
-            {
-                while (_reader.Read())
+                if (lsPlaylists.SelectedItem == null)
                 {
-                    _list.Add(_reader.GetString(0));
+                    lsPlaylists.SetSelected(0, true);
+                    var item = lsPlaylists.SelectedItem.ToString();
+                    int index = lsPlaylists.FindString(item);
+                    if (index != -1)
+                        lsPlaylists.SetSelected(index, true);
+                }
+                if (lsPlaylists.Items.Contains(lsPlaylists.SelectedIndex) || lsPlaylists.Items.Contains(lsPlaylists.SelectedItem))
+                {
+                    var _list = _db.Query("SELECT name FROM " + lsPlaylists.SelectedItem.ToString()).ToList();
+                    foreach (var _song in _list)
+                    {
+                        lsSongs.Items.Add(_song.name.ToString());
+                    }
                 }
             }
-            foreach (var _song in _list)
-            {
-                lsSongs.Items.Add(_song.ToString());
-            }
-
-            _conn.Close();
         }
     }
 }
