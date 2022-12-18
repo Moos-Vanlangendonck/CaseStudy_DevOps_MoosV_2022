@@ -28,7 +28,7 @@ jobs:
             uses: Nuget/setup-nuget@v1.0.5
 
           - name: Restore NuGet
-            run: nuget restore "${{ github.workspace }}/CaseStudy_DevOps_MoosV_2022.csproj"
+            run: nuget restore -SolutionDirectory "${{ github.workspace }}/CaseStudy_DevOps_MoosV_2022.csproj"
 
           -
             name: Build Application 
